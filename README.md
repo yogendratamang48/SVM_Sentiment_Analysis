@@ -1,3 +1,5 @@
+## Sentiment Classfication using Support Vector Machine
+This project classifies reviews into positive or negative sentiment. A model is developed based on Support Vector Machine(SVM). Reviews of Baby products, obtained from [Amazon Product Reviews Dataset], is used to train `SVM`. 
 ## Installation
 * Install dependencies using `requirements.txt` file. 
 * go to directory `sarahsa` and run following command
@@ -23,15 +25,22 @@ def get_dataframe_from_json(path=None):
     return df
 ```
 * Now you have dataframe
-## Data Preprocess steps:
-### Preparing Datasets
+### Data Preprocess steps:
+#### Preparing Datasets
 - `overall` column gives user's rating for given product. This columns value range is upto 5
 - We convert rating greater than 3 to Positive Sentiment
 - We convert rating less than 3 to Negative Sentiment
 - Removing reviews with empty string
-### Data Distribution
+#### Data Distribution
 - We are using 20,000 reviews of positive sentiments
 - We are using 17001 reviews of negative sentiments
 ![data distribution]('../images/data_distribution.png') 
 
-### 
+After all of these preprocessing steps we save our data to `data/final_data.csv` file. This data can directly used for training our model
+### Model Development 
+#### Steps #### 
+- Loading Dataset  
+- Train-Test Split of dataset
+- Performing K-Folds cross validation and GridSearch to optimize parameters
+- Training model with Train Dataset and Testing
+- Saving the model
