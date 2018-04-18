@@ -3,13 +3,10 @@
 
 import numpy as np
 import pandas as pd
-from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 import nltk
 from nltk.corpus import stopwords
-from nltk.tokenize import Tokenizer
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
@@ -22,11 +19,14 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import confusion_matrix, roc_auc_score, recall_score, precision_score
 from sklearn.model_selection import learning_curve
 
+import pickle
+from sklearn.externals import joblib
+
 def tokenize(text): 
     '''
     converts sentences into words list: tokenization
     '''
-    tknzr = TweetTokenizer()
+    tknzr = nltk.word_tokenize()
     return tknzr.tokenize(text)
 
 def stem(doc):
@@ -79,32 +79,14 @@ def plot_learning_curve(X, y, train_sizes, train_scores, test_scores, title='', 
     
 def TrainSVM():
     print("1. Loading Data...")
-    data = pd.read_csv("../data/Tweets.csv", encoding="latin1")
-
-    print("2. Cleaning Data")
-    data_clean = data.copy()
-    data_clean = data_clean[data_clean['airline_sentiment_confidence'] > 0.65]
-    data_clean['sentiment'] = data_clean['airline_sentiment'].\
-        apply(lambda x: 1 if x=='negative' else 0)
-
-    data_clean['text_clean'] = data_clean['text'].apply(lambda x: BeautifulSoup(x, "lxml").text)
-    data_clean['sentiment'] = data_clean['airline_sentiment'].apply(lambda x: 1 if x=='negative' else 0)
-    data_clean = data_clean.loc[:, ['text_clean', 'sentiment']]
-
-    print("3. Data Cleaned, Samples: ")
-    print(data_clean.head())
-
+    data = pd.read_csv("../data/final_data.csv")
     print("4. Train-Test Split")
-    train, test = train_test_split(data_clean, test_size=0.2, random_state=1)
-    X_train = train['text_clean'].values
-    X_test = test['text_clean'].values
+    train, test = train_test_split(data_clean, test_size=0.3, random_state=1)
+    X_train = train['reviewText'].values
+    X_test = test['reviewText'].values
     y_train = train['sentiment']
     y_test = test['sentiment']
-
-    
-
     en_stopwords = set(stopwords.words("english")) 
-
     vectorizer = CountVectorizer(
         analyzer = 'word',
         tokenizer = tokenize,
@@ -127,6 +109,9 @@ def TrainSVM():
 
     grid_svm.fit(X_train, y_train)
     grid_svm.score(X_test, y_test)
+    print("Saving Model")
+    joblib.dump(grid_svm, '../saved_model/model.pkl')
+
     print("5.1 Best Paramerter and Score")
     print(grid_svm.best_params_)
     print(grid_svm.best_score_)

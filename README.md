@@ -17,3 +17,15 @@ def get_dataframe_from_json(path=None):
     return df
 ```
 * Now you have dataframe
+## Data Preprocess steps:
+### Preparing Datasets
+- `overall` column gives user's rating for given product. This columns value range is upto 5
+- We convert rating greater than 3 to Positive Sentiment
+- We convert rating less than 3 to Negative Sentiment
+#### Data Cleaning Removing reviews with empty string
+### Data Distribution
+- We are using 20,000 reviews of positive sentiments
+- We are using 17001 reviews of negative sentiments
+![data distribution]('../images/data_distribution.png') 
+
+### 
