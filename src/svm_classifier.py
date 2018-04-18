@@ -79,13 +79,16 @@ def plot_learning_curve(X, y, train_sizes, train_scores, test_scores, title='', 
 def TrainSVM():
     print("1. Loading Data...")
     data = pd.read_csv("../data/final_data.csv", sep="\t")
-    print("4. Train-Test Split")
+    print("2. Train-Test Split")
     train, test = train_test_split(data, test_size=0.3, random_state=1)
     X_train = train['reviewText'].values
     X_test = test['reviewText'].values
     y_train = train['sentiment']
     y_test = test['sentiment']
-    en_stopwords = set(stopwords.words("english")) 
+    # get stop words
+    en_stopwords = set(stopwords.words("english"))
+
+    # creating vector from word 
     vectorizer = CountVectorizer(
         analyzer = 'word',
         tokenizer = tokenize,
@@ -93,7 +96,7 @@ def TrainSVM():
         ngram_range=(1, 1),
         stop_words = en_stopwords)
 
-    print("5. Performing Cross Validation and GridSearch")
+    print("3. Performing Cross Validation and GridSearch")
     kfolds = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
     np.random.seed(1)
     pipeline_svm = make_pipeline(vectorizer, 
@@ -111,16 +114,16 @@ def TrainSVM():
     print("Saving Model")
     joblib.dump(grid_svm, '../saved_model/model.pkl')
 
-    print("5.1 Best Paramerter and Score")
+    print("3.1 Best Paramerter and Score")
     print(grid_svm.best_params_)
     print(grid_svm.best_score_)
 
-    print("5.2 Test Results")
+    print("3.2 Test Results")
     print(report_results(grid_svm.best_estimator_, X_test, y_test))
 
     roc_svm = get_roc_curve(grid_svm.best_estimator_, X_test, y_test)
 
-    print("6. ROC Curve plot") 
+    print("4. ROC Curve plot") 
     fpr, tpr = roc_svm
     plt.figure(figsize=(14,8))
     plt.plot(fpr, tpr, color="red")
@@ -132,7 +135,7 @@ def TrainSVM():
     plt.title('Roc curve')
     plt.show()
     
-    print("7.0 Plotting Learning Curve")
+    print("5.0 Plotting Learning Curve")
     train_sizes, train_scores, test_scores = \
     learning_curve(grid_svm.best_estimator_, X_train, y_train, cv=5, n_jobs=-1, 
                    scoring="roc_auc", train_sizes=np.linspace(.1, 1.0, 10))
@@ -142,9 +145,6 @@ def TrainSVM():
     plt.show()
     import code
     code.interact(local=locals())
-
-
-    
 if __name__=="__main__":
     print("Calling Main function")
     TrainSVM()

@@ -36,11 +36,29 @@ def get_dataframe_from_json(path=None):
 - We are using 17001 reviews of negative sentiments
 ![data distribution]('../images/data_distribution.png') 
 
-After all of these preprocessing steps we save our data to `data/final_data.csv` file. This data can directly used for training our model
+After all of these preprocessing steps, we save our data to `data/final_data.csv` file. This data can directly used for training our model
 ### Model Development 
 #### Steps #### 
 - Loading Dataset  
 - Train-Test Split of dataset
 - Performing K-Folds cross validation and GridSearch to optimize parameters
 - Training model with Train Dataset and Testing
-- Saving the model
+Train with powerful machine. My Machine, i5 5200U with 8GB RAM took nearly 3 hours to train.
+- Saving the model  
+Model is saved under `saved_model/model.pkl` file. You can load this model at any time and then start working with it.
+
+#### Results Obtained
+- Training Accuracy: 0.95033
+##### Test Results
+| SN  | Measures           | Value  |
+| --- |:-------------:| -----:|
+| 1 |  Accuracy  | 0.89767 |
+| 2 | Precision      |    0.905369 |
+| 3 | Recall    |    0.90627 |
+| 4 | F1 Score |  0.905819 |
+| 5 | Area under the curve | 0.9559 |
+
+##### ROC Curve
+![ROC CURVE]('images/roc.png')
+
+####
