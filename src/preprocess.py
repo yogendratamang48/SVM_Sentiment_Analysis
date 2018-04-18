@@ -57,12 +57,17 @@ def remove_neutral_rows(df, column_name=None, threshold=None):
         column_name = 'overall'
     if threshold is None:
         threshold = 3
-    df = df[df[column_name]>3 or df[column_name]<3]
+    df = df[(df[column_name]>3)|(df[column_name]<3)]
     return df
 
 if __name__=='__main__':
     # Loading dataset
     df = get_df_with_required_columns()
+    print(df.shape)
     # Removing Netural Rows
-    df = remove_neutral_rows()
+    df = remove_neutral_rows(df)
+    print(df.shape)
+    # Remove NA values
+    df = df.dropna(axis=0, how='any')
+    print(df.shape)
     code.interact(local=locals())
