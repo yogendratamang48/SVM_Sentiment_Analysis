@@ -26,8 +26,7 @@ def tokenize(text):
     '''
     converts sentences into words list: tokenization
     '''
-    tknzr = nltk.word_tokenize()
-    return tknzr.tokenize(text)
+    return nltk.word_tokenize(text)
 
 def stem(doc):
     return (stemmer.stem(w) for w in analyzer(doc))
@@ -79,9 +78,9 @@ def plot_learning_curve(X, y, train_sizes, train_scores, test_scores, title='', 
     
 def TrainSVM():
     print("1. Loading Data...")
-    data = pd.read_csv("../data/final_data.csv")
+    data = pd.read_csv("../data/final_data.csv", sep="\t")
     print("4. Train-Test Split")
-    train, test = train_test_split(data_clean, test_size=0.3, random_state=1)
+    train, test = train_test_split(data, test_size=0.3, random_state=1)
     X_train = train['reviewText'].values
     X_test = test['reviewText'].values
     y_train = train['sentiment']
