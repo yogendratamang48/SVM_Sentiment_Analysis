@@ -61,4 +61,10 @@ Model is saved under `saved_model/model.pkl` file. You can load this model at an
 ##### ROC Curve
 ![ROC CURVE]('images/roc.png')
 
-####
+#### Learning Curve
+![Learning Curve]('images/learningcurve.png')
+
+#### Loading Model
+```python
+
+```
