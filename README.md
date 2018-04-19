@@ -1,5 +1,24 @@
 ## Sentiment Classfication using Support Vector Machine
 This project classifies reviews into positive or negative sentiment. A model is developed based on Support Vector Machine(SVM). Reviews of Baby products, obtained from [Amazon Product Reviews Dataset], is used to train `SVM`. 
+### Objective
+- To classify reviews into positive or negative
+### How to run trained Model ?
+There is file `src/run_project.py` go to `src` folder and run following command
+>`python run_project.py`
+This will ask you to enter review text. You can write your review for example:
+>`Excellent Product`
+
+[Some Demos]('../images/run_demo.png')
+
+### Limitations:
+- ouput is better when you give reviews with long sentences
+
+### AI Techniques Used:
+- Supervised Classification using Support Vector Machine
+- NLP techniques like tokenization, stemming
+- K-fold cross validation and parameter optimization using Grid Search
+### END Result
+You have model trained on Amazon Product dataset.
 ## Installation
 * Install dependencies using `requirements.txt` file. 
 * go to directory `sarahsa` and run following command
@@ -49,6 +68,7 @@ Model is saved under `saved_model/model.pkl` file. You can load this model at an
 
 #### Results Obtained
 - Training Accuracy: 0.95033
+- Test Accuracy: 0.89767
 ##### Test Results
 | SN  | Measures           | Value  |
 | --- |:-------------:| -----:|

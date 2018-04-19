@@ -16,6 +16,10 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import confusion_matrix, roc_auc_score, recall_score, precision_score
 from sklearn.model_selection import learning_curve
 from sklearn.externals import joblib
+import pickle
+
+VARIABLES_PATH='../saved_variables/variables.pkl'
+MODEL_PATH = '../saved_model/model.pkl'
 
 def tokenize(text): 
     '''
@@ -24,11 +28,37 @@ def tokenize(text):
     return nltk.word_tokenize(text)
 
 # Load trained model
-MODEL_PATH = '../saved_model/model.pkl'
-sa_model = joblib.load(MODEL_PATH)
-sentiment_string = input("Enter Text to classify sentiment: \n")
-sentiment = sa_model.predict([sentiment_string])
-if sentiment[0] == [0]:
-    print("NEGATIVE SENTIMENT")
-else:
-    print("POSITIVE SENTIMENT")
+def load_variables(path=None):
+    '''
+    loads variables in following order
+    [X_train, y_train, X_test, y_test, train_scores, 
+    test_scores, train_sizes,fpr, tpr]
+    '''
+    if path is None:
+        path=VARIABLES_PATH
+    with open(path, 'wb'):
+        variables = pickle.load(path)
+    return variables
+
+def run_sentiment():
+    '''
+    loads trained model
+    '''
+    sa_model = joblib.load(MODEL_PATH)
+    sentiment_string="TEST"
+    print("For better result input review with more than 5 words: \n")
+    
+    while sentiment_string:
+        sentiment_string = input("Enter Text to classify sentiment: \n")
+        if sentiment_string.strip() != "":
+            sentiment = sa_model.predict([sentiment_string])
+            print("SENTIMENT Information")
+            if sentiment[0] == [0]:
+                print("NEGATIVE SENTIMENT\n")
+            else:
+                print("POSITIVE SENTIMENT\n")
+        else:
+            sentiment_string=None
+
+if __name__=='__main__':
+    run_sentiment()
