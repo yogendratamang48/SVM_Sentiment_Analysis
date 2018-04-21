@@ -51,12 +51,18 @@ def run_sentiment():
     while sentiment_string:
         sentiment_string = input("Enter Text to classify sentiment: \n")
         if sentiment_string.strip() != "":
-            sentiment = sa_model.predict([sentiment_string])
-            print("SENTIMENT Information")
-            if sentiment[0] == [0]:
-                print("NEGATIVE SENTIMENT\n")
+            sentiment = sa_model.predict_proba([sentiment_string])
+            print("SENTIMENT Information".center(30,"*"))
+            print("POSITIVE Probability: %s" % sentiment[0][1])
+            print("-".center(30,"-"))
+            print("NEGATIVE Probability: %s" % sentiment[0][0])
+            print("-".center(30,"-"))
+            print("Final Sentiment".center(30, "*"))
+            if sentiment[0][0]>sentiment[0][1]:
+                print("NEGATIVE SENTIMENT")
             else:
-                print("POSITIVE SENTIMENT\n")
+                print("POSITIVE SENTIMENT:")
+            print("=".center(50, "="))
         else:
             sentiment_string=None
 
