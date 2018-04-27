@@ -2,10 +2,18 @@
 This project classifies reviews into positive or negative sentiment. A model is developed based on Support Vector Machine(SVM). Reviews of Baby products, obtained from [Amazon Product Reviews Dataset], is used to train `SVM`. 
 ### Objective
 - To classify reviews into positive or negative
+
+## Installation
+* I recommend to use `virtualenv`
+* Install dependencies using `requirements.txt` file. 
+* go to directory `sarahsa` and run following command
+>`pip install -r requirements.txt`
+* In addition to this, you need to download some data (`punkt`, `stopworkds`) of `nltk` module, for this, just run following command
 ### How to run trained Model ?
+
 There is file `src/run_project.py` go to `src` folder and run following command
 >`python run_project.py`
-This will ask you to enter review text. You can write your review for example:
+This will ask you to enter review text. You can write your review for example:  
 >`Excellent Product`
 
 ![Some Demos]('../images/run_demo.png')
@@ -19,11 +27,6 @@ This will ask you to enter review text. You can write your review for example:
 - K-fold cross validation and parameter optimization using Grid Search
 ### END Result
 You have model trained on Amazon Product dataset.
-## Installation
-* Install dependencies using `requirements.txt` file. 
-* go to directory `sarahsa` and run following command
->`pip install -r requirements.txt`
-* In addition to this, you need to download some data (`punkt`, `stopworkds`) of `nltk` module, for this, just run following command
 >`python nltk_setup.py`
 ## Prelimininary Steps
 * Download dataset from [amazon dataset page](http://jmcauley.ucsd.edu/data/amazon/)
@@ -53,7 +56,7 @@ def get_dataframe_from_json(path=None):
 #### Data Distribution
 - We are using 20,000 reviews of positive sentiments
 - We are using 17001 reviews of negative sentiments
-![data distribution]('../images/data_distribution.png') 
+![data distribution](./images/data_distribution.png) 
 
 After all of these preprocessing steps, we save our data to `data/final_data.csv` file. This data can directly used for training our model
 ### Model Development 
@@ -79,12 +82,46 @@ Model is saved under `saved_model/model.pkl` file. You can load this model at an
 | 5 | Area under the curve | 0.9559 |
 
 ##### ROC Curve
-![ROC CURVE]('images/roc.png')
+![ROC CURVE](./images/roc.png)
 
 #### Learning Curve
-![Learning Curve]('images/learningcurve.png')
+![Learning Curve](./images/learningcurve.png)
 
 #### Loading Model
 ```python
-
+def run_sentiment():
+    '''
+    loads trained model
+    '''
+    MODEL_PATH = '../saved_model/model.pkl'
+    sa_model = joblib.load(MODEL_PATH)
+    sentiment_string="TEST"
+    print("For better result input review with more than 5 words: \n")
+    
+    while sentiment_string:
+        sentiment_string = input("Enter Text to classify sentiment: \n")
+        if sentiment_string.strip() != "":
+            sentiment = sa_model.predict([sentiment_string])
+            print("SENTIMENT Information")
+            if sentiment[0] == [0]:
+                print("NEGATIVE SENTIMENT\n")
+            else:
+                print("POSITIVE SENTIMENT\n")
+        else:
+            sentiment_string=None
+```
+### Loading Variables
+```python
+def load_variables(path=None):
+    '''
+    loads variables in following order
+    [X_train, y_train, X_test, y_test, train_scores, 
+    test_scores, train_sizes,fpr, tpr]
+    '''
+    VARIABLES_PATH='../saved_variables/variables.pkl'
+    if path is None:
+        path=VARIABLES_PATH
+    with open(path, 'wb'):
+        variables = pickle.load(path)
+    return variables
 ```
