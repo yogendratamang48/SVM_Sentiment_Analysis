@@ -8,7 +8,7 @@ There is file `src/run_project.py` go to `src` folder and run following command
 This will ask you to enter review text. You can write your review for example:
 >`Excellent Product`
 
-[Some Demos]('../images/run_demo.png')
+![Some Demos]('../images/run_demo.png')
 
 ### Limitations:
 - ouput is better when you give reviews with long sentences

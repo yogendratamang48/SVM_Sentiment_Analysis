@@ -27,19 +27,6 @@ def tokenize(text):
     '''
     return nltk.word_tokenize(text)
 
-# Load trained model
-def load_variables(path=None):
-    '''
-    loads variables in following order
-    [X_train, y_train, X_test, y_test, train_scores, 
-    test_scores, train_sizes,fpr, tpr]
-    '''
-    if path is None:
-        path=VARIABLES_PATH
-    with open(path, 'wb'):
-        variables = pickle.load(path)
-    return variables
-
 def run_sentiment():
     '''
     loads trained model
