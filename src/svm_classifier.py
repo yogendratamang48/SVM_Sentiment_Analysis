@@ -1,5 +1,4 @@
-# %matplotlib inline
-# %config InlineBackend.figure_format = 'retina'
+ %matplotlib inline
 
 import numpy as np
 import pandas as pd
@@ -34,7 +33,6 @@ def stem(doc):
 def report_results(model, X, y):
     pred_proba = model.predict_proba(X)[:, 1]
     pred = model.predict(X)        
-
     auc = roc_auc_score(y, pred_proba)
     acc = accuracy_score(y, pred)
     f1 = f1_score(y, pred)
@@ -49,7 +47,6 @@ def get_roc_curve(model, X, y):
     return fpr, tpr
     
 def plot_learning_curve(X, y, train_sizes, train_scores, test_scores, title='', ylim=None, figsize=(14,8)):
-
     plt.figure(figsize=figsize)
     plt.title(title)
     if ylim is not None:
@@ -86,6 +83,11 @@ def TrainSVM():
     y_train = train['sentiment']
     y_test = test['sentiment']
     # get stop words
+    # Review ===> 0, 1
+
+    # Review - X - review Text
+    # output -y - 0, 1
+
     en_stopwords = set(stopwords.words("english"))
 
     # creating vector from word 
@@ -113,16 +115,12 @@ def TrainSVM():
     grid_svm.score(X_test, y_test)
     print("Saving Model")
     joblib.dump(grid_svm, '../saved_model/model.pkl')
-
     print("3.1 Best Paramerter and Score")
     print(grid_svm.best_params_)
     print(grid_svm.best_score_)
-
     print("3.2 Test Results")
     print(report_results(grid_svm.best_estimator_, X_test, y_test))
-
     roc_svm = get_roc_curve(grid_svm.best_estimator_, X_test, y_test)
-
     print("4. ROC Curve plot") 
     fpr, tpr = roc_svm
     plt.figure(figsize=(14,8))
@@ -134,7 +132,6 @@ def TrainSVM():
     plt.ylabel('True Positive Rate')
     plt.title('Roc curve')
     plt.show()
-    
     print("5.0 Plotting Learning Curve")
     train_sizes, train_scores, test_scores = \
     learning_curve(grid_svm.best_estimator_, X_train, y_train, cv=5, n_jobs=-1, 
@@ -143,8 +140,6 @@ def TrainSVM():
     plot_learning_curve(X_train, y_train, train_sizes, 
                     train_scores, test_scores, ylim=(0.7, 1.01), figsize=(14,6))
     plt.show()
-    import code
-    code.interact(local=locals())
 if __name__=="__main__":
     print("Calling Main function")
     TrainSVM()
