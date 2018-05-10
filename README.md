@@ -6,7 +6,7 @@ This project classifies reviews into positive or negative sentiment. A model is 
 ## Installation
 * I recommend to use `virtualenv`
 * Install dependencies using `requirements.txt` file. 
-* go to directory `sarahsa` and run following command
+* go to directory `project-root` and run following command
 >`pip install -r requirements.txt`
 * In addition to this, you need to download some data (`punkt`, `stopworkds`) of `nltk` module, for this, just run following command
 ### How to run trained Model ?
