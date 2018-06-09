@@ -9,6 +9,7 @@ This project classifies reviews into positive or negative sentiment. A model is 
 * go to directory `project-root` and run following command
 >`pip install -r requirements.txt`
 * In addition to this, you need to download some data (`punkt`, `stopworkds`) of `nltk` module, for this, just run following command
+>`python nltk_setup.py`
 ### How to run trained Model ?
 
 There is file `src/run_project.py` go to `src` folder and run following command
