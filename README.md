@@ -36,7 +36,7 @@ You have model trained on Amazon Product dataset.
 * Make the json file more like list of json. For this I simply did:  
 -- `sed -i 's|$|,|g` - adds comma(`,`) at each end of line  
 -- add `[` to first character of the file
-** replace `,` with `]` at last character of file
+-- replace `,` with `]` at last character of file
 ```python
 def get_dataframe_from_json(path=None):
     '''
@@ -48,6 +48,9 @@ def get_dataframe_from_json(path=None):
     return df
 ```
 * Now you have dataframe
+* Run following command:  
+>`python preprocess.py`
+This command will save our data in `data` folder. The filename will be `data/final_data.csv`
 ### Data Preprocess steps:
 #### Preparing Datasets
 - `overall` column gives user's rating for given product. This columns value range is upto 5
