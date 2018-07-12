@@ -7,7 +7,7 @@ import numpy as np
 
 COLUMNS_TO_KEEP = ['asin', 'overall', 'reviewText', 'summary']
 FINAL_COLUMNS = ['sentiment', 'reviewText', 'word_count']
-POSITIVES = 20000
+POSITIVES = 17500
 
 
 # Loading dataset
@@ -26,7 +26,7 @@ df = df.dropna(axis=0, how='any')
 # Create Usable dataset conver ratings 4, 5 to sentiment 1
 # Ratings 1 and 2 to sentiment 0
 df['sentiment']=df['overall'].apply(lambda x: 1 if x>4 else 0)
-df['word_count']=df['reviewText'].apply(lambda x: len(x.split(" ")))
+df['word_count']=df['reviewText'].apply(lambda x: len(x.split(' ')))
 df_positives = df[df['sentiment']==1].head(POSITIVES)
 df_negatives = df[df['sentiment']==0]
 
@@ -54,7 +54,8 @@ plt.ylabel("Count")
 plt.title("Sentiment Distribution")
 plt.savefig('../images/data_distribution.png')
 # Write this to csv file
-df = df[FINAL_COLUMNS]
-df.to_csv('../data/final_data.csv', sep='\t')
-print(df.shape)
+df_final = df_combined[FINAL_COLUMNS]
+df_final.to_csv('../data/final_data.csv')
+df_final.to_json('../data/final_data.json')
+print(df_final.shape)
 #code.interact(local=locals())
