@@ -22,8 +22,6 @@ from sklearn.model_selection import train_test_split
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 from collections import Counter
-import pudb
-pudb.set_trace()
 
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
@@ -47,8 +45,8 @@ def load_lstm_model(model):
     return loaded_model
 
 
-def sentiment_to_words(raw_tweet):
-    words = letters_only.lower().split()
+def sentiment_to_words(raw_sentiment):
+    words = raw_sentiment.lower().split()
     stops = set(stopwords.words("english"))
     meaningful_words = [w for w in words if not w in stops]
     return( " ".join( meaningful_words ))
