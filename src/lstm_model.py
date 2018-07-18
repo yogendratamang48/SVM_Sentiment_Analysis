@@ -23,10 +23,11 @@ from sklearn.model_selection import train_test_split
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 from collections import Counter
+import string
 import json
 import pdb
 
-DATASET = '../data/final_data_less.csv'
+DATASET = '../data/final_data.csv'
 
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
@@ -98,8 +99,12 @@ def TrainLSTM():
     split_frac = 0.8
     split_idx = int(len(features)*0.8)
     X = features
-    train_x, test_x = features[:split_idx], features[split_idx:]
-    train_y, test_y = Y[:split_idx], Y[split_idx:]
+    # TRAIN_X, TEST_X = features[:split_idx], features[split_idx:]
+    # TRAIN_Y, TEST_Y = Y[:split_idx], Y[split_idx:]
+    
+
+    train_x, test_x = features[0:split_idx], features[split_idx:]
+    train_y, test_y = Y[0:split_idx], Y[split_idx:]
 
     print("\t\t\tFeature Shapes:")
     print("Train set: \t\t{}".format(train_x.shape),
@@ -116,12 +121,12 @@ def TrainLSTM():
     model = Sequential()
     model.add(Embedding(max_features, embed_dim,input_length = train_x.shape[1]))
     model.add(Dropout(0.2, noise_shape=None, seed=None))
-    model.add(LSTM(lstm_out, dropout_U=0.2, dropout_W=0.2))
+    model.add(LSTM(lstm_out, activation='tanh', recurrent_activation='hard_sigmoid', dropout=0.2, recurrent_dropout=0.2))
     model.add(Dense(2,activation='softmax'))
     model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
 
     batch_size = 10
-    history=model.fit(train_x, train_y, validation_split=0.2, nb_epoch = 3, batch_size=batch_size, verbose = 2)
+    history=model.fit(train_x, train_y, validation_split=0.2, epochs = 3, batch_size=batch_size, verbose=1)
     score,acc = model.evaluate(test_x, test_y, verbose = 2, batch_size = batch_size)
     print("score: %.2f" % (score))
     print("acc: %.2f" % (acc))
