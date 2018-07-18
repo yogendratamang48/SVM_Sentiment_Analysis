@@ -15,6 +15,7 @@ from keras.layers import Dense, Embedding, LSTM, Dropout
 from keras.models import load_model
 from keras.models import model_from_json
 from keras.utils.np_utils import to_categorical
+from keras.callbacks import ModelCheckpoint
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
@@ -22,10 +23,14 @@ from sklearn.model_selection import train_test_split
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 from collections import Counter
+import json
+import pdb
+
+DATASET = '../data/final_data_less.csv'
 
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
-DATASET = '../data/final_data.csv'
+HISTORY_FILE = '../saved_model/history_lstm.json'
 
 # In[2]:
 
@@ -46,7 +51,9 @@ def load_lstm_model(model):
 
 
 def sentiment_to_words(raw_sentiment):
-    words = raw_sentiment.lower().split()
+    # clean punctuation
+    punctuation_removed = re.sub('['+string.punctuation+']', '', raw_sentiment)
+    words = punctuation_removed.lower().split()
     stops = set(stopwords.words("english"))
     meaningful_words = [w for w in words if not w in stops]
     return( " ".join( meaningful_words ))
@@ -113,8 +120,8 @@ def TrainLSTM():
     model.add(Dense(2,activation='softmax'))
     model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
 
-    batch_size = 4
-    history=model.fit(train_x, train_y, validation_split=0.2, nb_epoch = 10, batch_size=batch_size, verbose = 2)
+    batch_size = 10
+    history=model.fit(train_x, train_y, validation_split=0.2, nb_epoch = 3, batch_size=batch_size, verbose = 2)
     score,acc = model.evaluate(test_x, test_y, verbose = 2, batch_size = batch_size)
     print("score: %.2f" % (score))
     print("acc: %.2f" % (acc))
@@ -152,6 +159,9 @@ def TrainLSTM():
     plt.xlabel('epoch')
     plt.legend(['accuracy', 'loss'], loc='upper left')
     plt.savefig('../images/train_history.png')
+    #saving history files
+    with open(HISTORY_FILE, 'w') as history_file:
+        json.dump(history.history, history_file)
     # summarize history for loss
 if __name__=='__main__':
     TrainLSTM()
