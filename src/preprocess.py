@@ -12,7 +12,7 @@ POSITIVES = 17500
 
 # Loading dataset
 path='../data/baby.json'
-df = pd.read_json(path)
+df = pd.read_json(path, lines=True)
 # Removing unwanted columns
 df = df[COLUMNS_TO_KEEP]
 # change empty or white space to NAN

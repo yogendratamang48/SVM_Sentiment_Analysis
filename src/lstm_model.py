@@ -27,7 +27,9 @@ import string
 import json
 import pdb
 
-DATASET = '../data/final_data.csv'
+DATASET = '../data/final_data_less.csv'
+
+
 
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
