@@ -8,6 +8,7 @@ import numpy as np
 COLUMNS_TO_KEEP = ['asin', 'overall', 'reviewText', 'summary']
 FINAL_COLUMNS = ['sentiment', 'reviewText', 'word_count']
 POSITIVES = 17500
+TEST_SIZE = 1000
 
 
 # Loading dataset
@@ -55,7 +56,22 @@ plt.title("Sentiment Distribution")
 plt.savefig('../images/data_distribution.png')
 # Write this to csv file
 df_final = df_combined[FINAL_COLUMNS]
-df_final.to_csv('../data/final_data.csv')
-df_final.to_json('../data/final_data.json')
+
+df_final_less = df_final[:TEST_SIZE]
+
+df_final.to_csv('../data/final_data.csv', index=False)
+df_final_less.to_csv('../data/final_data_less.csv', index=False)
+
+split_idx = int(df_final.shape[0]*0.8)
+split_idx_ = int(df_final_less.shape[0]*0.8)
+
+df_train, df_test = df_final[0:split_idx], df_final[split_idx:]
+df_train_less, df_test_less = df_final_less[0:split_idx_], df_final_less[split_idx_:]
+
 print(df_final.shape)
+df_train.to_csv('../data/train.csv', index=False)
+df_train_less.to_csv('../data/train_less.csv', index=False)
+
+df_test.to_csv('../data/test.csv', index=False)
+df_test_less.to_csv('../data/test_less.csv', index=False)
 #code.interact(local=locals())

@@ -34,7 +34,7 @@ import lstm_model
 # pudb.set_trace()
 
 DATASET = '../data/final_data_less.csv'
-MAX_REVIEW_SIZE = 270
+MAX_REVIEW_SIZE = 555
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
 HISTORY_FILE = '../saved_model/history_lstm.json'
@@ -49,7 +49,7 @@ def load_lstm_model():
     # evaluate loaded model on test data
     return loaded_model
 
-def convert_to_lstm_domain(raw_sentiment):
+def get_train_test_words():
     '''
     converts to LSTM domain
     '''
@@ -80,6 +80,10 @@ def convert_to_lstm_domain(raw_sentiment):
         features[i, -len(row):] = np.array(row)[:seq_len]
     return features
 
+def return_train_test():
+    '''
+    returns train test
+    '''
 
 def lstm_probability(sentiment_string):
     """

@@ -28,9 +28,6 @@ import json
 import pdb
 
 DATASET = '../data/final_data_less.csv'
-
-
-
 LSTM_MODEL_JSON = '../saved_model/model_lstm.json'
 LSTM_MODEL_WEIGHTS = '../saved_model/model_lstm.h5'
 HISTORY_FILE = '../saved_model/history_lstm.json'
@@ -61,10 +58,14 @@ def sentiment_to_words(raw_sentiment):
     meaningful_words = [w for w in words if not w in stops]
     return( " ".join( meaningful_words ))
 
-def TrainLSTM():
+
+def get_train_test_words():
+    '''
+    converts to LSTM domain
+    '''
+    # global MAX_REVIEW_SIZE
     sentiment_data = pd.read_csv(DATASET)
     Sentiment = sentiment_data.copy()
-    #Pre-process the tweet and store in a separate column
     Sentiment['clean_sentiment']=Sentiment['reviewText'].apply(lambda x: sentiment_to_words(x))
     #Join all the words in review to build a corpus
     all_text = ' '.join(Sentiment['clean_sentiment'])
@@ -83,38 +84,28 @@ def TrainLSTM():
     #Find the number of tweets with zero length after the data pre-processing
     sentiment_len = Counter([len(x) for x in sentiment_ints])
 
-    print("Zero-length reviews: {}".format(sentiment_len[0]))
-    print("Maximum review length: {}".format(max(sentiment_len)))
-
-    #Remove those tweets with zero length and its correspoding label
-    sweet_idx  = [idx for idx,sent in enumerate(sentiment_ints) if len(sent) > 0]
-    labels = labels[sweet_idx]
-    Sentiment = Sentiment.iloc[sweet_idx]
-    sentiment_ints = [sent for sent in sentiment_ints if len(sent) > 0]
     seq_len = max(sentiment_len)
     features = np.zeros((len(sentiment_ints), seq_len), dtype=int)
     for i, row in enumerate(sentiment_ints):
         features[i, -len(row):] = np.array(row)[:seq_len]
-
     Y = pd.get_dummies(Sentiment['sentiment']).values
-
     split_frac = 0.8
     split_idx = int(len(features)*0.8)
     X = features
     # TRAIN_X, TEST_X = features[:split_idx], features[split_idx:]
     # TRAIN_Y, TEST_Y = Y[:split_idx], Y[split_idx:]
-    
-
     train_x, test_x = features[0:split_idx], features[split_idx:]
     train_y, test_y = Y[0:split_idx], Y[split_idx:]
+    return train_x, test_x, train_y, test_y, words
 
+def TrainLSTM():
+    train_x, test_x, train_y, test_y, words = get_train_test_words()
     print("\t\t\tFeature Shapes:")
     print("Train set: \t\t{}".format(train_x.shape),
           "\nValidation set: \t{}".format(test_x.shape))
 
     print("Train set: \t\t{}".format(train_y.shape),
           "\nTest set: \t\t{}".format(test_y.shape))
-
 
     embed_dim = 128
     lstm_out = 196
