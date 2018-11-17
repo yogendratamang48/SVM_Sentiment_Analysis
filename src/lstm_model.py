@@ -50,23 +50,12 @@ def load_lstm_model(model):
     return loaded_model
 
 
-def sentiment_to_words(raw_sentiment):
-    # clean punctuation
-    punctuation_removed = re.sub('['+string.punctuation+']', '', raw_sentiment)
-    words = punctuation_removed.lower().split()
-    stops = set(stopwords.words("english"))
-    meaningful_words = [w for w in words if not w in stops]
-    return( " ".join( meaningful_words ))
-
-
 def get_train_test_words():
     '''
     converts to LSTM domain
     '''
     # global MAX_REVIEW_SIZE
-    sentiment_data = pd.read_csv(DATASET)
-    Sentiment = sentiment_data.copy()
-    Sentiment['clean_sentiment']=Sentiment['reviewText'].apply(lambda x: sentiment_to_words(x))
+    Sentiment = pd.read_csv(DATASET)
     #Join all the words in review to build a corpus
     all_text = ' '.join(Sentiment['clean_sentiment'])
     words = all_text.split()
@@ -109,7 +98,7 @@ def TrainLSTM():
 
     embed_dim = 128
     lstm_out = 196
-    max_features=len(words)-1
+    max_features=len(words)
 
     model = Sequential()
     model.add(Embedding(max_features, embed_dim,input_length = train_x.shape[1]))
@@ -119,7 +108,7 @@ def TrainLSTM():
     model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
 
     batch_size = 10
-    history=model.fit(train_x, train_y, validation_split=0.2, epochs = 3, batch_size=batch_size, verbose=1)
+    history=model.fit(train_x, train_y, validation_split=0.2, epochs = 1, batch_size=batch_size, verbose=1)
     score,acc = model.evaluate(test_x, test_y, verbose = 2, batch_size = batch_size)
     print("score: %.2f" % (score))
     print("acc: %.2f" % (acc))
